@@ -1,3 +1,5 @@
+import time
+
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -64,6 +66,7 @@ class StudentsPerformanceDataset(Dataset):
 #  ---------------  Model  ---------------
 
 class Net(nn.Module):
+
     def __init__(self, D_in, H1=1024, H2=256, H3=64, D_out=1):
         """
         Args:
@@ -219,6 +222,8 @@ if __name__ == "__main__":
     # By default, read csv file in the same directory as this script
     csv_file = os.path.join(sys.path[0], "Before_During_After_Exposure_Complete.csv")
 
+    start_time = time.time()
+
     # Parsing arguments
     parser = argparse.ArgumentParser()
     parser.add_argument("--file", "-f", nargs="?", const=csv_file, default=csv_file,
@@ -228,3 +233,7 @@ if __name__ == "__main__":
 
     # Call the main function of the script
     train(args.file, args.epochs)
+
+    end_time = time.time()
+
+    print("Time:", end_time - start_time)
