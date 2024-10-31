@@ -1,5 +1,4 @@
 import time
-
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -11,7 +10,7 @@ from torch.utils.data import Dataset, DataLoader, random_split
 
 #  ---------------  Dataset  ---------------
 
-class StudentsPerformanceDataset(Dataset):
+class TimeSinceSonarExposureDataset(Dataset):
     """Students Performance dataset."""
 
     def __init__(self, csv_file):
@@ -24,7 +23,7 @@ class StudentsPerformanceDataset(Dataset):
 
         # Define categorical columns - only include columns that actually exist in the dataset
         self.categorical = []
-        for col in ["index", "splpk", "splrms", "dissim", "impulsivity", "peakcount"]:
+        for col in ["index", "splpk", "splrms", "dissim", "impulsivity", "peakcount", "day_of_week", "time_of_day"]:
             if col in df.columns:
                 self.categorical.append(col)
 
@@ -38,22 +37,22 @@ class StudentsPerformanceDataset(Dataset):
         if self.categorical:
             # Create prefix dictionary mapping each categorical column to itself as prefix
             prefix_dict = {col: col for col in self.categorical}
-            self.students_frame = pd.get_dummies(df, columns=self.categorical, prefix=prefix_dict)
+            self.exposure_frame = pd.get_dummies(df, columns=self.categorical, prefix=prefix_dict)
         else:
-            self.students_frame = df.copy()
+            self.exposure_frame = df.copy()
             print("Warning: No categorical columns found in dataset")
 
         # Save target and predictors
-        self.X = self.students_frame.drop(self.target, axis=1)
-        self.y = self.students_frame[self.target]
+        self.X = self.exposure_frame.drop(self.target, axis=1)
+        self.y = self.exposure_frame[self.target]
 
         # Print dataset info
-        print(f"Dataset loaded with {len(self.X.columns)} features and {len(self.students_frame)} samples")
+        print(f"Dataset loaded with {len(self.X.columns)} features and {len(self.exposure_frame)} samples")
         if self.categorical:
             print(f"Categorical columns encoded: {', '.join(self.categorical)}")
 
     def __len__(self):
-        return len(self.students_frame)
+        return len(self.exposure_frame)
 
     def __getitem__(self, idx):
         # Convert idx from tensor to list due to pandas bug (that arises when using pytorch's random_split)
@@ -102,7 +101,7 @@ def train(csv_file, n_epochs=100):
         n_epochs (int): Number of epochs to train.
     """
     # Load dataset
-    dataset = StudentsPerformanceDataset(csv_file)
+    dataset = TimeSinceSonarExposureDataset(csv_file)
 
     # Get input dimension from the dataset
     D_in = len(dataset.X.columns)
@@ -220,7 +219,7 @@ if __name__ == "__main__":
     import argparse
 
     # By default, read csv file in the same directory as this script
-    csv_file = os.path.join(sys.path[0], "Before_During_After_Exposure_Complete.csv")
+    csv_file = os.path.join(sys.path[0], "Before_During_After_Exposure_0601_0719.csv")
 
     start_time = time.time()
 
