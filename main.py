@@ -94,7 +94,7 @@ class Net(nn.Module):
 
 #  ---------------  Training  ---------------
 
-def train(csv_file, n_epochs=30):
+def train(csv_file, n_epochs=10):
     """Trains the model.
     Args:
         csv_file (str): Absolute path of the dataset used for training.
@@ -210,8 +210,8 @@ def train(csv_file, n_epochs=30):
     plt.ylabel('Loss')
     plt.legend()
     plt.title('Training and Validation Loss Over Time')
-    plt.show()
     plt.savefig('NNProj.png')
+    plt.show()
 
 
 if __name__ == "__main__":
@@ -228,7 +228,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--file", "-f", nargs="?", const=csv_file, default=csv_file,
                         help="Dataset file used for training")
-    parser.add_argument("--epochs", "-e", type=int, nargs="?", default=100, help="Number of epochs to train")
+    parser.add_argument("--epochs", "-e", type=int, nargs="?", default=30, help="Number of epochs to train")
     args = parser.parse_args()
 
     # Call the main function of the script
