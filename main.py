@@ -23,7 +23,7 @@ class TimeSinceSonarExposureDataset(Dataset):
 
         # Define categorical columns - only include columns that actually exist in the dataset
         self.categorical = []
-        for col in ["index", "splpk", "splrms", "dissim", "impulsivity", "peakcount", "day_of_week", "time_of_day"]:
+        for col in ["splpk", "splrms", "dissim", "impulsivity", "peakcount", "day_of_week", "time_of_day"]:
             if col in df.columns:
                 self.categorical.append(col)
 
@@ -94,7 +94,7 @@ class Net(nn.Module):
 
 #  ---------------  Training  ---------------
 
-def train(csv_file, n_epochs=100):
+def train(csv_file, n_epochs=30):
     """Trains the model.
     Args:
         csv_file (str): Absolute path of the dataset used for training.
@@ -211,6 +211,7 @@ def train(csv_file, n_epochs=100):
     plt.legend()
     plt.title('Training and Validation Loss Over Time')
     plt.show()
+    plt.savefig('NNProj.png')
 
 
 if __name__ == "__main__":
