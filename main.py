@@ -178,7 +178,7 @@ def train(csv_file, n_epochs=10):
             torch.save(net.state_dict(), 'best_model.pth')
 
         # Print progress
-        if (epoch + 1) % 10 == 0:
+        if (epoch + 1) % 2 == 0:
             print(f'Epoch [{epoch + 1}/{n_epochs}], '
                   f'Train Loss: {epoch_loss:.4f}, '
                   f'Test Loss: {test_loss:.4f}')
@@ -228,7 +228,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--file", "-f", nargs="?", const=csv_file, default=csv_file,
                         help="Dataset file used for training")
-    parser.add_argument("--epochs", "-e", type=int, nargs="?", default=30, help="Number of epochs to train")
+    parser.add_argument("--epochs", "-e", type=int, nargs="?", default=10, help="Number of epochs to train")
     args = parser.parse_args()
 
     # Call the main function of the script
