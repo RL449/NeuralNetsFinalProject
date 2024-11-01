@@ -94,7 +94,7 @@ class Net(nn.Module):
 
 #  ---------------  Training  ---------------
 
-def train(csv_file, n_epochs=10):
+def train(csv_file, n_epochs=100):
     """Trains the model.
     Args:
         csv_file (str): Absolute path of the dataset used for training.
@@ -228,7 +228,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--file", "-f", nargs="?", const=csv_file, default=csv_file,
                         help="Dataset file used for training")
-    parser.add_argument("--epochs", "-e", type=int, nargs="?", default=10, help="Number of epochs to train")
+    parser.add_argument("--epochs", "-e", type=int, nargs="?", default=30, help="Number of epochs to train")
     args = parser.parse_args()
 
     # Call the main function of the script
