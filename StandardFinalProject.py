@@ -53,7 +53,7 @@ class CNNMetricsStatistics(nn.Module):
 # Helper functions
 def time_to_hour(time_str):
     """Convert time from string to integer"""
-    time_parts = str(time_str).split(':')  # Convert from HH:MM to HH
+    time_parts = str(time_str).split(":")  # Convert from HH:MM to HH
     return int(time_parts[0])
 
 def one_hot_encoding(column):
@@ -71,15 +71,30 @@ def one_hot_encoding(column):
 def prepare_data(file_path):
     df = pd.read_csv(file_path)  # Read from .csv file
 
-    day_one_hot, day_categories = one_hot_encoding(df['day_of_week'])  # Perform one hot encoding
-    time_hour = df['time_of_day'].apply(time_to_hour).values.reshape(-1, 1)  # Convert time_of_day to hours
+    day_one_hot, day_categories = one_hot_encoding(df["day_of_week"])  # Perform one hot encoding
 
-    feature_columns = ['splpk', 'splrms', 'dissim', 'impulsivity', 'peakcount']  # Columns used to predict time since exposure
+    # StudentsPerformance
+    # gender_one_hot, gender_categories = one_hot_encoding(df["gender"])
+    # race_one_hot, race_categories = one_hot_encoding(df["race/ethnicity"])
+    # parent_one_hot, parent_categories = one_hot_encoding(df["parental level of education"])
+    # lunch_one_hot, lunch_categories = one_hot_encoding(df["lunch"])
+    # test_one_hot, test_categories = one_hot_encoding(df["test preparation course"])
+
+    time_hour = df["time_of_day"].apply(time_to_hour).values.reshape(-1, 1)  # Convert time_of_day to hours
+
+    feature_columns = ["splpk", "splrms", "dissim", "impulsivity", "peakcount"]  # Columns used to predict time since exposure
     numerical_features = df[feature_columns].values
+
+    # StudentsPerformance
+    # feature_columns = [gender_one_hot, race_one_hot, parent_one_hot, lunch_one_hot, test_one_hot]
 
     # Combine all features
     x = np.hstack([numerical_features, day_one_hot, time_hour])
-    y = df['time_since_exposure'].values.reshape(-1, 1)  # Other columns used to predict time since exposure
+    y = df["time_since_exposure"].values.reshape(-1, 1)  # Other columns used to predict time since exposure
+
+    # StudentsPerformance
+    # x = np.hstack([gender_one_hot, race_one_hot, parent_one_hot, lunch_one_hot, test_one_hot])
+    # y = df["math score"].values.reshape(-1, 1)
 
     # Scale features
     scaler_x = StandardScaler()
@@ -145,7 +160,11 @@ learning_rate = 0.01  # Learning rate
 num_epochs = 1500  # Number of epochs to iterate through
 
 # Prepare data
-x, y, scaler_y = prepare_data('Before_During_After_Exposure_0601_0719.csv')
+x, y, scaler_y = prepare_data("Before_During_After_Exposure_0601_0719.csv")
+
+# StudentsPerformance
+# x, y, scaler_y = prepare_data("StudentsPerformance.csv")
+
 input_dimension = x.shape[1]  # Number of input features
 x_train, x_test, y_train, y_test = train_test_split(x, y)  # Perform train/test split
 

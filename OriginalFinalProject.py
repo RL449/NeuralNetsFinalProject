@@ -24,6 +24,10 @@ class TimeSinceSonarExposureDataset(Dataset):
         self.categorical = ["day_of_week", "time_of_day"]
         self.target = "time_since_exposure"
 
+        # StudentsPerformance
+        # self.categorical = ["gender", "race/ethnicity", "parental level of education", "lunch", "test preparation course"]
+        # self.target = "math score"
+
         # One-hot encoding of categorical variables
         self.exposure_frame = pd.get_dummies(df, columns=self.categorical, prefix=self.categorical)
 
@@ -238,6 +242,9 @@ if __name__ == "__main__":
 
     # By default, read csv file in the same directory as this script
     csv_file = os.path.join(sys.path[0], "Before_During_After_Exposure_0601_0719.csv")
+
+    # StudentsPerformance
+    # csv_file = os.path.join(sys.path[0], "StudentsPerformance.csv")
 
     # Parsing arguments
     parser = argparse.ArgumentParser()
