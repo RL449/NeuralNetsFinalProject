@@ -169,7 +169,7 @@ def train(csv_file, n_epochs=100):
         y_true_train_binary = [1 if label >= 0.5 else 0 for label in y_true_train]
         y_pred_train_binary = [1 if pred >= 0.5 else 0 for pred in y_pred_train]
 
-        train_accuracy = calculate_accuracy(y_true_train_binary, y_pred_train_binary) # accuracy_score(y_true_train_binary, y_pred_train_binary) * 100
+        train_accuracy = calculate_accuracy(y_true_train_binary, y_pred_train_binary)
         mse_score = calculate_mse(y_true_train_binary, y_pred_train_binary)
         train_precision = precision_score(y_true_train_binary, y_pred_train_binary)
         train_f1 = calculate_f1_score(y_true_train_binary, y_pred_train_binary)

@@ -99,8 +99,6 @@ def prepare_data(file_path):
     # Scale features
     scaler_x = StandardScaler()
     scaler_y = StandardScaler()
-
-    # Scale features
     x_scaled = scaler_x.fit_transform(x)
     y_scaled = scaler_y.fit_transform(y)
 
@@ -173,7 +171,28 @@ cnn_model = CNNMetricsStatistics(input_dimension, output_dimension, dropout_rate
 criterion = nn.MSELoss()  # Loss function
 optimizer = torch.optim.AdamW(cnn_model.parameters(), lr=learning_rate, weight_decay=0.01)  # Initialize optimizer
 
-train_losses, test_losses = train_model(cnn_model, x_train, y_train, x_test, y_test, criterion, optimizer, num_epochs)  # Initialize optimizer
+train_losses, test_losses = train_model(cnn_model, x_train, y_train, x_test, y_test, criterion, optimizer, num_epochs)  # Perform training
+
+# Plot original metrics
+file_path = "Before_During_After_Exposure_0601_0719.csv"
+data = pd.read_csv(file_path)
+
+# Ensure required columns are present
+required_columns = ["splpk", "splrms", "dissim", "impulsivity", "peakcount"]
+
+# Plot each metric
+plt.figure(figsize=(10, 15))
+for i, column in enumerate(required_columns, 1):
+    plt.subplot(len(required_columns), 1, i)
+    plt.plot(data[column], label=column, color="b", linewidth=1, alpha=0.5)
+    plt.title(column.capitalize())
+    plt.xlabel("Index")
+    plt.ylabel("Value")
+    plt.grid(True, alpha=0.5)
+    plt.legend()
+
+plt.tight_layout()  # Fix layout to prevent overlap
+plt.show()
 
 # Confusion matrix
 def confusion_matrix(y_true, y_pred, num_classes):
@@ -195,7 +214,7 @@ print("Confusion Matrix:\n", conf_mat)  # Display confusion matrix
 # ARIMA analysis
 def arima_analysis(predictions, order=(1, 1, 1)):
     """
-    Autoregressive integrated moving average
+    Autoregressive Integrated Moving Average
     Predicts future values
     """
     arima_model = ARIMA(predictions, order=order)  # Initialize model
@@ -205,7 +224,6 @@ def arima_analysis(predictions, order=(1, 1, 1)):
 
 def plot_arima_forecast(model, x_test):
     """Plot ARIMA forecast"""
-    # Get the predictions from the trained model
     predictions = model(x_test).detach().numpy().flatten()  # Get trained model predictions
 
     _, forecast = arima_analysis(predictions)  # Perform ARIMA forecast on predictions
@@ -342,7 +360,7 @@ y_true_binary = y_true  # Real values
 accuracy = calculate_accuracy(y_true_binary, y_pred_binary)
 mse = calculate_mse(y_test.numpy().flatten(), cnn_model(x_test).detach().numpy().flatten())
 
-# Binarize labels (if target should be binary)
+# Binarize labels
 y_true_test = [1 if label >= 0.5 else 0 for label in y_true_binary]
 y_pred_binary = [1 if pred >= 0.5 else 0 for pred in y_pred_binary]
 
